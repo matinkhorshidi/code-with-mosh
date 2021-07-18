@@ -2,7 +2,6 @@ import React from 'react';
 import CounterApp from './CounterApp';
 import MovieTable from './MovieTable';
 import NavBar from './NavBar';
-import { Navbar, Container, Nav } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 
 class App extends React.Component {
@@ -51,14 +50,18 @@ class App extends React.Component {
     );
   }
 
-  handleIncrement = (counterId) => {
+  handleIncrement = (counter) => {
     let counters = [...this.state.counters];
-    counters[counterId].value++;
+    const index = counters.indexOf(counter);
+    counters[index] = { ...counters[index] };
+    counters[index].value++;
     this.setState({ counters });
   };
-  handleDecrement = (counterId) => {
+  handleDecrement = (counter) => {
     let counters = [...this.state.counters];
-    counters[counterId].value--;
+    const index = counters.indexOf(counter);
+    counters[index] = { ...counters[index] };
+    counters[index].value--;
     this.setState({ counters });
   };
   handleDelete = (counterId) => {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Navbar, Container, Badge } from 'react-bootstrap';
 import { Label } from 'semantic-ui-react';
 

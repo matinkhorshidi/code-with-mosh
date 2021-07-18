@@ -8,7 +8,13 @@ class Like extends Component {
     if (this.props.liked) {
       iconClass = 'fas fa-heart fa-1x';
     }
-    return <i className={iconClass}></i>;
+    return (
+      <i
+        className={iconClass}
+        onClick={this.props.onClick}
+        style={{ cursor: 'pointer' }}
+      ></i>
+    );
   }
 }
 

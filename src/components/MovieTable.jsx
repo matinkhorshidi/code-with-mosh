@@ -21,7 +21,12 @@ class MovieTable extends Component {
     //     }
   };
   likeClicked = (movie) => {
-    alert('clicked');
+    console.log(movie);
+    let movies = [...this.state.movies];
+    const index = movies.indexOf(movie);
+    movies[index] = { ...movies[index] };
+    movies[index].liked = !movies[index].liked;
+    this.setState({ movies });
   };
 
   render() {
@@ -50,7 +55,10 @@ class MovieTable extends Component {
                 <td>{movie.numberInStock}</td>
                 <td>{movie.dailyRentalRate}</td>
                 <td>
-                  <Like liked={false} onClick={() => this.likeClicked(movie)} />
+                  <Like
+                    liked={movie.liked}
+                    onClick={() => this.likeClicked(movie)}
+                  />
                 </td>
                 <td>
                   <Button negative onClick={() => this.handleDelete(movie)}>
