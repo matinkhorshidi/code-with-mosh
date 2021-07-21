@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Like from './common/like';
 import { Button } from 'semantic-ui-react';
 import { paginate } from '../utils/paginate';
-import TableHeader from './common/TableHeader';
+import Table from './common/Table';
 var _ = require('lodash');
 
 class MovieTable extends Component {
@@ -12,11 +12,29 @@ class MovieTable extends Component {
     { path: 'genre.name', label: 'Genre' },
     { path: 'numberInStock', label: 'Stock' },
     { path: 'dailyRentalRate', label: 'Rate' },
-    { key: 'like' },
-    { key: 'delete' },
+    {
+      key: 'like',
+      content: (movie) => (
+        <Like
+          liked={movie.liked}
+          onClick={() => this.props.likeMovieClicked(movie)}
+        />
+      ),
+    },
+    {
+      key: 'delete',
+      content: (movie, length) => (
+        <Button
+          negative
+          onClick={() => this.props.handleDeleteMovie(movie, length)}
+        >
+          delete
+        </Button>
+      ),
+    },
   ];
-  render() {
-    if (this.props.movies.length === 0) return <div>'no movie to show'</div>;
+
+  getPageData = () => {
     const filtered =
       this.props.selectedGenre && this.props.selectedGenre._id
         ? this.props.movies.filter(
@@ -36,46 +54,24 @@ class MovieTable extends Component {
       this.props.PageSize
     );
 
+    return { totalCount: filtered.length, data: PagMovies };
+  };
+  render() {
+    if (this.props.movies.length === 0) return <div>'no movie to show'</div>;
+    const { totalCount, data } = this.getPageData();
     return (
       <div>
         <div className="ui section hidden divider">
-          Showing {filtered.length} movies
+          Showing {totalCount} movies
         </div>
         <div className="ui hidden section divider"></div>
 
-        <table className="ui very basic table">
-          <TableHeader
-            columns={this.columns}
-            sortColumn={this.props.sortColumn}
-            handleSort={this.props.handleSort}
-          />
-          <tbody>
-            {PagMovies.map((movie) => (
-              <tr key={movie._id}>
-                <td>{movie.title}</td>
-                <td>{movie.genre.name}</td>
-                <td>{movie.numberInStock}</td>
-                <td>{movie.dailyRentalRate}</td>
-                <td>
-                  <Like
-                    liked={movie.liked}
-                    onClick={() => this.props.likeMovieClicked(movie)}
-                  />
-                </td>
-                <td>
-                  <Button
-                    negative
-                    onClick={() =>
-                      this.props.handleDeleteMovie(movie, PagMovies.length)
-                    }
-                  >
-                    delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table
+          data={data}
+          columns={this.columns}
+          sortColumn={this.props.sortColumn}
+          handleSort={this.props.handleSort}
+        />
       </div>
     );
   }

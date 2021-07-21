@@ -5,8 +5,12 @@ import React, { Component } from 'react';
 //  onSort : Function
 
 class TableHeader extends Component {
-  state = {};
-
+  renderSortIcon = (column) => {
+    if (column.path !== this.props.sortColumn.path) return null;
+    if (this.props.sortColumn.order === 'asc')
+      return <i className="fa fa-sort-asc" />;
+    return <i className="fa fa-sort-desc" />;
+  };
   render() {
     return (
       <thead>
@@ -17,7 +21,7 @@ class TableHeader extends Component {
               onClick={() => this.props.handleSort(column.path)}
               style={{ cursor: 'pointer' }}
             >
-              {column.label}
+              {column.label} {this.renderSortIcon(column)}
             </th>
           ))}
         </tr>
