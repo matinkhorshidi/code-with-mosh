@@ -27,7 +27,6 @@ class CounterApp extends Component {
               ))}
             </Row>
           </Col>
-          <Col>col 2</Col>
         </Row>
       </Container>
     );

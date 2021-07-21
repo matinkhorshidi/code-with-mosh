@@ -2,6 +2,13 @@ import * as genresAPI from './fakeGenreService';
 
 const movies = [
   {
+    _id: '2b21ca3eeb7f6fbccd471821',
+    title: 'The Interstellar',
+    genre: { _id: '5b21ca3eeb7f6fbccd471818', name: 'Action' },
+    numberInStock: 9,
+    dailyRentalRate: 5,
+  },
+  {
     _id: '5b21ca3eeb7f6fbccd471815',
     title: 'Terminator',
     genre: { _id: '5b21ca3eeb7f6fbccd471818', name: 'Action' },

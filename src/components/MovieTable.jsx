@@ -1,54 +1,56 @@
 import React, { Component } from 'react';
 
 import Like from './common/like';
-
 import { Button } from 'semantic-ui-react';
-import { getMovies } from '../services/fakeMovieService';
+import { paginate } from '../utils/paginate';
+import TableHeader from './common/TableHeader';
+var _ = require('lodash');
 
 class MovieTable extends Component {
-  state = { movies: getMovies() };
-
-  handleDelete = (movie) => {
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
-    this.setState({ movies });
-
-    //   ravesh 2
-    //     var array = [...this.state.movies];
-    //     let index = array.indexOf(movie);
-    //     if (index !== -1) {
-    //       array.splice(index, 1);
-    //       this.setState({ movies: array });
-    //     }
-  };
-  likeClicked = (movie) => {
-    console.log(movie);
-    let movies = [...this.state.movies];
-    const index = movies.indexOf(movie);
-    movies[index] = { ...movies[index] };
-    movies[index].liked = !movies[index].liked;
-    this.setState({ movies });
-  };
-
+  columns = [
+    { path: 'title', label: 'Title' },
+    { path: 'genre.name', label: 'Genre' },
+    { path: 'numberInStock', label: 'Stock' },
+    { path: 'dailyRentalRate', label: 'Rate' },
+    { key: 'like' },
+    { key: 'delete' },
+  ];
   render() {
+    if (this.props.movies.length === 0) return <div>'no movie to show'</div>;
+    const filtered =
+      this.props.selectedGenre && this.props.selectedGenre._id
+        ? this.props.movies.filter(
+            (m) => m.genre._id === this.props.selectedGenre._id
+          )
+        : this.props.movies;
+
+    const sorted = _.orderBy(
+      filtered,
+      [this.props.sortColumn.path],
+      [this.props.sortColumn.order]
+    );
+
+    const PagMovies = paginate(
+      sorted,
+      this.props.CurrentPage,
+      this.props.PageSize
+    );
+
     return (
-      <div style={{ textAlign: 'center' }}>
+      <div>
         <div className="ui section hidden divider">
-          Showing {this.state.movies.length} movies{' '}
+          Showing {filtered.length} movies
         </div>
         <div className="ui hidden section divider"></div>
-        <table className="ui very basic table" style={{ textAlign: 'center' }}>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Gener</th>
-              <th>Stock</th>
-              <th>Rate</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
+
+        <table className="ui very basic table">
+          <TableHeader
+            columns={this.columns}
+            sortColumn={this.props.sortColumn}
+            handleSort={this.props.handleSort}
+          />
           <tbody>
-            {this.state.movies.map((movie) => (
+            {PagMovies.map((movie) => (
               <tr key={movie._id}>
                 <td>{movie.title}</td>
                 <td>{movie.genre.name}</td>
@@ -57,11 +59,16 @@ class MovieTable extends Component {
                 <td>
                   <Like
                     liked={movie.liked}
-                    onClick={() => this.likeClicked(movie)}
+                    onClick={() => this.props.likeMovieClicked(movie)}
                   />
                 </td>
                 <td>
-                  <Button negative onClick={() => this.handleDelete(movie)}>
+                  <Button
+                    negative
+                    onClick={() =>
+                      this.props.handleDeleteMovie(movie, PagMovies.length)
+                    }
+                  >
                     delete
                   </Button>
                 </td>
