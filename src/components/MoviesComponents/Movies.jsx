@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import MovieTable from './MovieTable';
-import Pagination from '../common/PaginationComponent';
 import ListGroup from '../common/ListGroupComponent.jsx';
 import MovieDetails from './MovieDetails';
 
@@ -10,6 +9,9 @@ import { getGenres } from '../../services/fakeGenreService';
 import { Row, Col } from 'react-bootstrap';
 
 import { Switch, Route } from 'react-router-dom';
+import PaginationComponent from './../common/PaginationComponent';
+import _ from 'lodash';
+import { paginate } from '../../utils/paginate';
 
 class Movies extends Component {
   state = {
@@ -18,10 +20,11 @@ class Movies extends Component {
     CurrentPage: 1,
     PageSize: 4,
     sortColumn: { path: 'title', order: 'asc' },
+    selectedGenre: { name: 'AllGenres', _id: 0 },
   };
 
   componentDidMount() {
-    const geners = [{ name: 'AllGenres' }, ...getGenres()];
+    const geners = [{ name: 'AllGenres', _id: 0 }, ...getGenres()];
     this.setState({
       movies: getMovies(),
       geners,
@@ -29,8 +32,8 @@ class Movies extends Component {
   }
 
   render() {
+    const { totalCount, data } = this.getPageData();
     let itemsCount = this.state.movies.length;
-    let pageSize = Math.ceil(itemsCount / this.state.PageSize);
     return (
       <Row>
         <div className="ui horizontal section divider">Movie Table</div>
@@ -53,14 +56,17 @@ class Movies extends Component {
             updateItemCount={this.updateItemCount}
             handleSort={this.handleSort}
             sortColumn={this.state.sortColumn}
+            data={data}
+            totalCount={totalCount}
           />
 
           <br />
         </Col>
-        <Pagination
-          size={pageSize}
+        <PaginationComponent
+          size={this.state.PageSize}
           active={this.state.CurrentPage}
           pagClicked={this.handlePagClicked}
+          itemsCount={totalCount}
         />
         <Switch>
           <Route path="/movies/:id" exact>
@@ -70,6 +76,21 @@ class Movies extends Component {
       </Row>
     );
   }
+  getPageData = () => {
+    const { selectedGenre, movies, sortColumn, CurrentPage, PageSize } =
+      this.state;
+
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? movies.filter((m) => m.genre._id === selectedGenre._id)
+        : movies;
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const PagMovies = paginate(sorted, CurrentPage, PageSize);
+    console.log('filtered.length');
+    console.log(filtered.length);
+    return { totalCount: filtered.length, data: PagMovies };
+  };
   // ! movie Functions
   handleSort = (path) => {
     const sortColumn = { ...this.state.sortColumn };

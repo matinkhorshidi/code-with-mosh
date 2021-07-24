@@ -5,11 +5,22 @@ import PropTypes from 'prop-types';
 import '../../styles/App.css';
 
 class PaginationComponent extends Component {
-  state = {};
   render() {
+    //console.log(items);
+    console.log('itemsCount');
+    console.log(this.props.itemsCount);
+    console.log('size');
+    console.log(this.props.size);
+    const paginationListCount = Math.ceil(
+      this.props.itemsCount / this.props.size
+    );
+    console.log('paginationListCount');
+    console.log(paginationListCount);
+    /*     if (paginationListCount === 1) return null; */
+    /*     const paginationListCountArray = _.range(1, paginationListCount + 1); */
     let active = this.props.active;
     let items = [];
-    for (let number = 1; number <= this.props.size; number++) {
+    for (let number = 1; number <= paginationListCount; number++) {
       items.push(
         <Pagination.Item
           key={number}
@@ -21,6 +32,9 @@ class PaginationComponent extends Component {
         </Pagination.Item>
       );
     }
+    console.log('items');
+    console.log(items);
+
     return (
       <Pagination
         style={{

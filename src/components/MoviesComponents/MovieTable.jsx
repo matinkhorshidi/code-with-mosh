@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 
 import Like from '../common/like';
 import { Button } from 'semantic-ui-react';
-import { paginate } from '../../utils/paginate';
 import { Link } from 'react-router-dom';
 
 import Table from '../common/Table';
-var _ = require('lodash');
 
 class MovieTable extends Component {
   columns = [
@@ -42,7 +40,7 @@ class MovieTable extends Component {
     },
   ];
 
-  getPageData = () => {
+  /*   getPageData = () => {
     const filtered =
       this.props.selectedGenre && this.props.selectedGenre._id
         ? this.props.movies.filter(
@@ -63,19 +61,19 @@ class MovieTable extends Component {
     );
 
     return { totalCount: filtered.length, data: PagMovies };
-  };
+  }; */
   render() {
     if (this.props.movies.length === 0) return <div>'no movie to show'</div>;
-    const { totalCount, data } = this.getPageData();
+    /*     const { totalCount, data } = this.getPageData(); */
     return (
       <div>
         <div className="ui section hidden divider">
-          Showing {totalCount} movies
+          Showing {this.props.totalCount} movies
         </div>
         <div className="ui hidden section divider"></div>
 
         <Table
-          data={data}
+          data={this.props.data}
           columns={this.columns}
           sortColumn={this.props.sortColumn}
           handleSort={this.props.handleSort}
