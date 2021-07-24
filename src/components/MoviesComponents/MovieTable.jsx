@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 
-import Like from './common/like';
+import Like from '../common/like';
 import { Button } from 'semantic-ui-react';
-import { paginate } from '../utils/paginate';
-import Table from './common/Table';
+import { paginate } from '../../utils/paginate';
+import { Link } from 'react-router-dom';
+
+import Table from '../common/Table';
 var _ = require('lodash');
 
 class MovieTable extends Component {
   columns = [
-    { path: 'title', label: 'Title' },
+    {
+      path: 'title',
+      label: 'Title',
+      content: (movie) => (
+        <Link to={`/movies/${movie._id}`}>{movie.title}</Link>
+      ),
+    },
     { path: 'genre.name', label: 'Genre' },
     { path: 'numberInStock', label: 'Stock' },
     { path: 'dailyRentalRate', label: 'Rate' },

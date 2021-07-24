@@ -6,7 +6,7 @@ class ListGroupComponent extends Component {
   render() {
     let linkKey = '#link';
     return (
-      <ListGroup defaultActiveKey="#link0">
+      <ListGroup style={{ marginTop: '20px' }} defaultActiveKey="#link0">
         {this.props.items.map((item, index) => (
           <ListGroup.Item
             href={linkKey + index}
