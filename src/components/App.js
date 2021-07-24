@@ -28,6 +28,7 @@ class App extends React.Component {
               <Movies />
             </Route>
             <Redirect from="/" to="/Movies" exact></Redirect>
+            <Redirect from="/code-with-mosh/" to="/Movies" exact></Redirect>
             <Redirect to="/Not-Found"></Redirect>
           </Switch>
         </Container>
